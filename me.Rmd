@@ -1,0 +1,53 @@
+---
+title: "Heng Hu"
+output: html_document
+---
+
+```{r message=FALSE, echo=FALSE}
+library(tidyverse)
+library(kableExtra)
+```
+
+<br><br><br>
+
+#### PROFESSIONAL EXPERIENCE
+
+<br>
+
+```{r echo=FALSE}
+
+prof_exp <- tibble(
+  time = c("2018.12 – Present", "2017.7 – 2018.12", "2005.7 – 2017.6"),
+  position = c("Staff Associate, Columbia Center for Children’s Environmental Health (CCCEH)<br>Mailman School of Public Health, Columbia University, New York, NY",
+               "Biospecimen Repository Specialist, Biobank<br>Shanghai East Hospital, Shanghai, China",
+               "Senior Laboratory Technician, Department of Public Health & Molecular Biology<br>Shanghai Municipal Center for Disease Control & Prevention, Shanghai, China")
+)
+
+kable(prof_exp, "html", col.names = NULL, escape = FALSE) |> 
+  kable_styling(full_width = F, position = "left")
+  
+```
+
+<br><br>
+
+#### EDUCATION
+
+<br>
+
+```{r echo=FALSE}
+
+edu <- tibble(
+  time = c("2025.9 – Present", "2010.9 – 2013.6", "2001.9 – 2005.6"),
+  school = c("M.S. in Biostatistics, Mailman School of Public Health<br>Columbia University, New York, NY",
+               "M.S. in Human Anatomy, Histology and Embryology, Shanghai Medical College<br>Fudan University, Shanghai, China",
+               "B.S. in Bioscience, School of Bioengineering<br>East China University of Science & Technology, Shanghai, China")
+)
+
+kable(edu, "html", col.names = NULL, escape = FALSE) |> 
+  kable_styling(full_width = F, position = "left")
+  
+```
+
+<br>
+
+Go back to the [homepage](index.html).

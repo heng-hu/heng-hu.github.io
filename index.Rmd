@@ -1,5 +1,5 @@
 ---
-title: "This is a serious website."
+title: "THIS IS A SERIOUS WEBSITE."
 output: 
   html_document:
     toc: true

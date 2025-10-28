@@ -3,8 +3,8 @@ title: "About"
 output: html_document
 ---
 
-This is Heng's homework. Don't laugh!!!
+This is Heng's homework. No laughing !!!
 
-![](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGd5a3h6aGxrZHl3bnh3OXR4dHB6cm9tZ3J3cXBnMjV0aWFwcGFuayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/kePYfGmpNtzAQ/giphy.gif)
+<img src="images/219518.gif" style="width:40%">
 
 Go back to the [homepage](index.html).
