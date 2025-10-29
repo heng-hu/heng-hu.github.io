@@ -110,9 +110,11 @@ airport |>
             snow_days = sum(snow > 0),
             rain_snow_days = sum(rain_snow_fl == 1)) |> 
   ungroup() |> 
-  mutate(label = paste0("Rain days: ", rain_days, "\nSnow days: ", snow_days)) |> 
+  mutate(label = paste0("Rain days: ", rain_days, 
+                        "\nSnow days: ", snow_days, 
+                        "\nRain or snow days: ", rain_snow_days)) |> 
   pivot_wider(names_from = airport, values_from = c(rain_days, snow_days, rain_snow_days, label)) |> 
-  plot_ly(x = ~year, y = ~rain_snow_days_JFK, name = "JFK", type = "bar", text = ~label_JFK) |> 
+  plot_ly(x = ~year, y = ~rain_snow_days_JFK, name = "JFK", type = "bar", text = ~label_JFK, hoverinfo = "text") |> 
   add_trace(y = ~rain_snow_days_LaGuardia, name = "LaGuardia", text = ~label_LaGuardia) |> 
   layout(
     xaxis = list(title = "Year"),
