@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "Airport Weather Data Explorer: JFK vs LaGuardia"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -32,13 +32,16 @@ airport = ny_noaa |>
   filter(year > 2000) |> 
   select(airport, id, date, year, month, day, everything())
 
+# Set colors
+airport_colors = c("JFK" = "#0079b2", "LaGuardia" = "#ff7f20")
+
 ```
 
 
 Column {data-width=650}
 -----------------------------------------------------------------------
 
-### Average Daily Temperature Curves at JFK and LaGuardia Airports
+### Average Daily Temperature Curves
 
 ```{r message=FALSE}
 
@@ -54,7 +57,7 @@ airport |>
                         "°C\nMinimum temperature: ", sprintf("%.1f", t_min), "°C")) |> 
   plot_ly(
     x = ~day_index, y = ~t_mean, type = "scatter", mode = "lines",
-    color = ~airport, text = ~label, hoverinfo = "text"
+    color = ~airport, colors = airport_colors, text = ~label, hoverinfo = "text"
     ) |> 
   layout(
     xaxis = list(title = "Day"),
@@ -80,8 +83,8 @@ airport |>
   filter(snow > 0 & snwd > 0) |>
   mutate(label = paste0("Date: ", date, "\nSnowfall: ", snow, " mm\nSnow depth: ", snwd, " mm")) |> 
   plot_ly(
-    x = ~snow, y = ~snwd, type = "scatter", mode = "markers",
-    color = ~airport, text = ~label, hoverinfo = "text", alpha = 0.5
+    x = ~snow, y = ~snwd, type = "scatter", mode = "markers", alpha = 0.5,
+    color = ~airport, colors = airport_colors, text = ~label, hoverinfo = "text" 
     ) |> 
   layout(
     xaxis = list(title = "Snowfall (mm)"),
@@ -90,13 +93,13 @@ airport |>
       orientation = "h",
       x = 0.5,
       xanchor = "center",
-      y = -0.2
+      y = -0.5
     )
   )
    
 ```
 
-### Annual Number of Rainy or Snowy Days at JFK and LaGuardia Airports
+### Annual Number of Rainy or Snowy Days
 
 ```{r message=FALSE}
 
@@ -119,7 +122,7 @@ airport |>
       orientation = "h",
       x = 0.5,
       xanchor = "center",
-      y = -0.2
+      y = -0.5
     )
   )
 
