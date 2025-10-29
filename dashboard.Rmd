@@ -1,0 +1,127 @@
+---
+title: "Untitled"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(flexdashboard)
+library(plotly)
+library(p8105.datasets)
+```
+
+```{r}
+
+# Read and tidy the data
+data("ny_noaa")
+
+airport = ny_noaa |> 
+  filter(id %in% c("USW00094789", "USW00014732")) |> 
+  mutate(airport = ifelse(id == "USW00094789", "JFK", "LaGuardia"),
+         airport = as.factor(airport),
+         year = as.integer(year(date)),
+         month = as.integer(month(date)),
+         day = as.integer(day(date)),
+         prcp = prcp / 10,
+         tmax = as.numeric(tmax) / 10,
+         tmin = as.numeric(tmin) / 10,
+         t_mean = (tmax + tmin) / 2) |> 
+  filter(year > 2000) |> 
+  select(airport, id, date, year, month, day, everything())
+
+```
+
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Average Daily Temperature Curves at JFK and LaGuardia Airports
+
+```{r message=FALSE}
+
+airport |> 
+  group_by(airport, month, day) |> 
+  summarise(t_mean = mean(t_mean),
+            t_max = max(tmax),
+            t_min = min(tmin)) |>
+  ungroup() |> 
+  mutate(day_index = (row_number() - 1) %% 366 + 1,
+         label = paste0("Date: ", month, "/", day,
+                        "\nMaximum temperature: ", sprintf("%.1f", t_max), 
+                        "°C\nMinimum temperature: ", sprintf("%.1f", t_min), "°C")) |> 
+  plot_ly(
+    x = ~day_index, y = ~t_mean, type = "scatter", mode = "lines",
+    color = ~airport, text = ~label, hoverinfo = "text"
+    ) |> 
+  layout(
+    xaxis = list(title = "Day"),
+    yaxis = list(title = "Average Daily Temperature (°C)"),
+    legend = list(
+      orientation = "h",
+      x = 0.5,
+      xanchor = "center",
+      y = -0.2
+    )
+  )
+
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Relationship Between Snowfall and Snow Depth
+
+```{r message=FALSE}
+
+airport |> 
+  filter(snow > 0 & snwd > 0) |>
+  mutate(label = paste0("Date: ", date, "\nSnowfall: ", snow, " mm\nSnow depth: ", snwd, " mm")) |> 
+  plot_ly(
+    x = ~snow, y = ~snwd, type = "scatter", mode = "markers",
+    color = ~airport, text = ~label, hoverinfo = "text", alpha = 0.5
+    ) |> 
+  layout(
+    xaxis = list(title = "Snowfall (mm)"),
+    yaxis = list(title = "Snow Depth (mm)"),
+    legend = list(
+      orientation = "h",
+      x = 0.5,
+      xanchor = "center",
+      y = -0.2
+    )
+  )
+   
+```
+
+### Annual Number of Rainy or Snowy Days at JFK and LaGuardia Airports
+
+```{r message=FALSE}
+
+airport |> 
+  mutate(rain_snow_fl = ifelse(prcp + snow > 0, 1, 0)) |> 
+  group_by(airport, year) |> 
+  summarise(rain_days = sum(prcp > 0),
+            snow_days = sum(snow > 0),
+            rain_snow_days = sum(rain_snow_fl == 1)) |> 
+  ungroup() |> 
+  mutate(label = paste0("Rain days: ", rain_days, "\nSnow days: ", snow_days)) |> 
+  pivot_wider(names_from = airport, values_from = c(rain_days, snow_days, rain_snow_days, label)) |> 
+  plot_ly(x = ~year, y = ~rain_snow_days_JFK, name = "JFK", type = "bar", text = ~label_JFK) |> 
+  add_trace(y = ~rain_snow_days_LaGuardia, name = "LaGuardia", text = ~label_LaGuardia) |> 
+  layout(
+    xaxis = list(title = "Year"),
+    yaxis = list(title = "Number of Days"),
+    barmode = "group",
+    legend = list(
+      orientation = "h",
+      x = 0.5,
+      xanchor = "center",
+      y = -0.2
+    )
+  )
+
+```
+
